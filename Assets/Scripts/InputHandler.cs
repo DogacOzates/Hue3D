@@ -12,7 +12,7 @@ public class InputHandler : MonoBehaviour
     
     [Header("Settings")]
     public LayerMask cubeLayerMask = -1;
-    public float dragThreshold = 8f; // Piksel cinsinden (düşürüldü)
+    public float dragThreshold = 20f; // Piksel cinsinden - mobilde parmak kayması için yeterli
     public float rotationSensitivity = 0.5f; // Artırıldı
     public float zoomSensitivity = 0.02f;
     
@@ -89,7 +89,29 @@ public class InputHandler : MonoBehaviour
                 touchCount++;
         }
         
-        // Tek parmak
+        // ÖNEMLİ: wasReleasedThisFrame kontrolü dış blokta olmalı!
+        // Çünkü parmak kaldırıldığında isPressed=false ve touchCount=0 olur,
+        // iç bloğa hiç girilmez.
+        if (primaryTouch.press.wasReleasedThisFrame)
+        {
+            if (!isDragging)
+            {
+                // Preview modunda: ekranın herhangi yerine tap = oyuna başla
+                if (GameManager.Instance != null && GameManager.Instance.isPreviewingLevel)
+                {
+                    GameManager.Instance.BeginPlayAfterPreview();
+                }
+                else
+                {
+                    // Release anında touchStartPosition kullan (daha güvenilir)
+                    TrySelectCubeAtPosition(touchStartPosition);
+                }
+            }
+            isDragging = false;
+            return;
+        }
+        
+        // Tek parmak - basılıyken
         if (touchCount == 1 || primaryTouch.press.isPressed)
         {
             Vector2 position = primaryTouch.position.ReadValue();
@@ -99,7 +121,6 @@ public class InputHandler : MonoBehaviour
                 touchStartPosition = position;
                 lastTouchPosition = position;
                 isDragging = false;
-
             }
             
             if (primaryTouch.press.isPressed)
@@ -110,40 +131,77 @@ public class InputHandler : MonoBehaviour
                 if (totalDistance > dragThreshold)
                 {
                     isDragging = true;
-                }
-                
-                // Kamerayı döndür
-                if (delta.magnitude > 0.5f)
-                {
-                    CameraController cam = CameraController.Instance;
-                    if (cam == null)
-                        cam = FindAnyObjectByType<CameraController>();
                     
-                    if (cam != null)
+                    // Kamerayı döndür - sadece drag modundayken
+                    if (delta.magnitude > 0.5f)
                     {
-                        cam.RotateCamera(delta.x * rotationSensitivity, -delta.y * rotationSensitivity);
+                        CameraController cam = CameraController.Instance;
+                        if (cam == null)
+                            cam = FindAnyObjectByType<CameraController>();
+                        
+                        if (cam != null)
+                        {
+                            cam.RotateCamera(delta.x * rotationSensitivity, -delta.y * rotationSensitivity);
+                        }
                     }
                 }
                 
                 lastTouchPosition = position;
             }
-            
-            if (primaryTouch.press.wasReleasedThisFrame)
-            {
-
-                if (!isDragging)
-                {
-                    TrySelectCubeAtPosition(primaryTouch.position.ReadValue());
-                }
-                isDragging = false;
-            }
         }
         
-        // İki parmak zoom (opsiyonel)
+        // İki parmak pinch zoom
         if (touchCount >= 2)
         {
-            // Şimdilik zoom'u atlıyoruz
             isDragging = true;
+            
+            // İki touch pozisyonunu bul
+            Vector2 pos0 = Vector2.zero, pos1 = Vector2.zero;
+            int found = 0;
+            foreach (var touch in touchscreen.touches)
+            {
+                if (touch.press.isPressed)
+                {
+                    if (found == 0) pos0 = touch.position.ReadValue();
+                    else if (found == 1) pos1 = touch.position.ReadValue();
+                    found++;
+                    if (found >= 2) break;
+                }
+            }
+            
+            if (found >= 2)
+            {
+                float currentPinchDist = Vector2.Distance(pos0, pos1);
+                
+                if (lastPinchDistance < 0.1f)
+                {
+                    // İlk frame — sadece kaydet
+                    lastPinchDistance = currentPinchDist;
+                }
+                else
+                {
+                    float pinchDelta = currentPinchDist - lastPinchDistance;
+                    
+                    if (Mathf.Abs(pinchDelta) > 1f)
+                    {
+                        CameraController cam = CameraController.Instance;
+                        if (cam == null)
+                            cam = FindAnyObjectByType<CameraController>();
+                        
+                        if (cam != null)
+                        {
+                            cam.ZoomCamera(-pinchDelta * zoomSensitivity);
+                        }
+                    }
+                    
+                    lastPinchDistance = currentPinchDist;
+                }
+            }
+        }
+        else
+        {
+            // İki parmak bırakıldığında reset
+            lastPinchDistance = 0f;
         }
     }
     
@@ -197,11 +255,18 @@ public class InputHandler : MonoBehaviour
                     break;
                     
                 case UnityEngine.InputSystem.TouchPhase.Ended:
-
                     // Sürükleme değilse tıklama sayılır
                     if (!isDragging)
                     {
-                        TrySelectCubeAtPosition(touch.screenPosition);
+                        // Preview modunda: ekranın herhangi yerine tap = oyuna başla
+                        if (GameManager.Instance != null && GameManager.Instance.isPreviewingLevel)
+                        {
+                            GameManager.Instance.BeginPlayAfterPreview();
+                        }
+                        else
+                        {
+                            TrySelectCubeAtPosition(touch.screenPosition);
+                        }
                     }
                     isDragging = false;
                     break;
@@ -277,7 +342,15 @@ public class InputHandler : MonoBehaviour
         {
             if (!isDragging)
             {
-                TrySelectCubeAtPosition(currentPos);
+                // Preview modunda: herhangi yere tıkla = oyuna başla
+                if (GameManager.Instance != null && GameManager.Instance.isPreviewingLevel)
+                {
+                    GameManager.Instance.BeginPlayAfterPreview();
+                }
+                else
+                {
+                    TrySelectCubeAtPosition(currentPos);
+                }
             }
             isDragging = false;
         }

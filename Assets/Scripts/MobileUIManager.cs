@@ -161,15 +161,15 @@ public class MobileUIManager : MonoBehaviour
         levelBtnRect.anchorMax = new Vector2(0.5f, 0.5f);
         levelBtnRect.pivot = new Vector2(0.5f, 0.5f);
         levelBtnRect.anchoredPosition = Vector2.zero;
-        levelBtnRect.sizeDelta = new Vector2(220, 56);
+        levelBtnRect.sizeDelta = new Vector2(280, 70);
         
         levelText = levelBtnObj.AddComponent<Text>();
-        levelText.text = "";  // EYKA: Başlangıçta boş, level başlayınca gösterilecek
+        levelText.text = "";
         levelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        levelText.fontSize = 34;
-        levelText.color = new Color(1f, 1f, 1f, 0.5f);  // Yarı saydam beyaz
+        levelText.fontSize = 48;
+        levelText.color = new Color(1f, 1f, 1f, 0.5f);
         levelText.alignment = TextAnchor.MiddleCenter;
-        levelText.fontStyle = FontStyle.Normal;  // İnce font (bold değil)
+        levelText.fontStyle = FontStyle.Normal;
         
         // Tıklanabilir yap
         levelSelectButton = levelBtnObj.AddComponent<Button>();
@@ -385,25 +385,25 @@ public class MobileUIManager : MonoBehaviour
     /// </summary>
     private void CreateBottomIconBar(Transform parent)
     {
-        // Alt ikon container - EYKA: ikonlar ekranın altında, yatay ortada
+        // Alt ikon container - ekranın altına tam yayılmış
         GameObject bottomBar = new GameObject("BottomIconBar");
         bottomBar.transform.SetParent(parent, false);
         
         RectTransform barRect = bottomBar.AddComponent<RectTransform>();
-        barRect.anchorMin = new Vector2(0.15f, 0);
-        barRect.anchorMax = new Vector2(0.85f, 0);
+        barRect.anchorMin = new Vector2(0.05f, 0);
+        barRect.anchorMax = new Vector2(0.95f, 0);
         barRect.pivot = new Vector2(0.5f, 0);
-        barRect.anchoredPosition = new Vector2(0, 35);
-        barRect.sizeDelta = new Vector2(0, 70);
+        barRect.anchoredPosition = new Vector2(0, 25);
+        barRect.sizeDelta = new Vector2(0, 90);
         
         HorizontalLayoutGroup hLayout = bottomBar.AddComponent<HorizontalLayoutGroup>();
-        hLayout.spacing = 0;
+        hLayout.spacing = 40;
         hLayout.childAlignment = TextAnchor.MiddleCenter;
         hLayout.childControlWidth = true;
         hLayout.childControlHeight = true;
         hLayout.childForceExpandWidth = true;
         hLayout.childForceExpandHeight = false;
-        hLayout.padding = new RectOffset(20, 20, 0, 0);
+        hLayout.padding = new RectOffset(40, 40, 0, 0);
         
         // Sol ikon - Bar chart (restart) - EYKA tarzı ince çizgiler
         GameObject leftIcon = CreateEykaIcon(bottomBar.transform, "RestartIcon", EykaIconType.BarChart);
@@ -441,7 +441,7 @@ public class MobileUIManager : MonoBehaviour
         iconObj.transform.SetParent(parent, false);
         
         RectTransform rect = iconObj.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(68, 58);
+        rect.sizeDelta = new Vector2(88, 78);
         
         // Şeffaf raycast target
         Image bgImage = iconObj.AddComponent<Image>();
@@ -450,8 +450,8 @@ public class MobileUIManager : MonoBehaviour
         
         // Layout element
         LayoutElement layout = iconObj.AddComponent<LayoutElement>();
-        layout.preferredWidth = 60;
-        layout.preferredHeight = 50;
+        layout.preferredWidth = 80;
+        layout.preferredHeight = 70;
         
         // İkon texture'ı oluştur - BEYAZ çizgi, Image.color ile renklendirilecek
         Texture2D iconTex = CreateEykaIconTexture(iconType, 128, new Color(1f, 1f, 1f, 1f));
@@ -465,7 +465,7 @@ public class MobileUIManager : MonoBehaviour
         iconRect.anchorMax = new Vector2(0.5f, 0.5f);
         iconRect.pivot = new Vector2(0.5f, 0.5f);
         iconRect.anchoredPosition = Vector2.zero;
-        iconRect.sizeDelta = new Vector2(58, 58);  // Daha büyük ikon
+        iconRect.sizeDelta = new Vector2(72, 72);  // Büyük ikon
         
         Image iconImage = iconVisual.AddComponent<Image>();
         Sprite iconSprite = Sprite.Create(iconTex, new Rect(0, 0, iconTex.width, iconTex.height), new Vector2(0.5f, 0.5f), 100f);
@@ -698,21 +698,21 @@ public class MobileUIManager : MonoBehaviour
         // Saydam - raycast yakalamaz, sadece text gösterir
         // (GameManager zaten tap algılıyor)
         
-        // Alt kısımda küçük text
+        // Ekranın ortasına yakın, büyük text
         GameObject textObj = new GameObject("TapText");
         textObj.transform.SetParent(tapToStartOverlay.transform, false);
         
         RectTransform textRect = textObj.AddComponent<RectTransform>();
-        textRect.anchorMin = new Vector2(0.5f, 1f);
-        textRect.anchorMax = new Vector2(0.5f, 1f);
-        textRect.pivot = new Vector2(0.5f, 1f);
-        textRect.anchoredPosition = new Vector2(0, -100);
-        textRect.sizeDelta = new Vector2(400, 50);
+        textRect.anchorMin = new Vector2(0.5f, 0.5f);
+        textRect.anchorMax = new Vector2(0.5f, 0.5f);
+        textRect.pivot = new Vector2(0.5f, 0.5f);
+        textRect.anchoredPosition = new Vector2(0, 420);
+        textRect.sizeDelta = new Vector2(700, 100);
         
         tapToStartText = textObj.AddComponent<Text>();
         tapToStartText.text = "tap to start";
         tapToStartText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        tapToStartText.fontSize = 32;
+        tapToStartText.fontSize = 60;
         tapToStartText.fontStyle = FontStyle.Normal;
         tapToStartText.alignment = TextAnchor.MiddleCenter;
         tapToStartText.color = new Color(0.55f, 0.45f, 0.62f, 0.85f);
@@ -849,13 +849,13 @@ public class MobileUIManager : MonoBehaviour
         textRect.anchorMin = new Vector2(0.5f, 0f);
         textRect.anchorMax = new Vector2(0.5f, 0f);
         textRect.pivot = new Vector2(0.5f, 0f);
-        textRect.anchoredPosition = new Vector2(0, 180);
-        textRect.sizeDelta = new Vector2(500, 80);
+        textRect.anchoredPosition = new Vector2(0, 450);
+        textRect.sizeDelta = new Vector2(600, 100);
         
         tutorialText = textObj.AddComponent<Text>();
         tutorialText.text = "";
         tutorialText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        tutorialText.fontSize = 30;
+        tutorialText.fontSize = 38;
         tutorialText.fontStyle = FontStyle.Normal;
         tutorialText.alignment = TextAnchor.MiddleCenter;
         tutorialText.color = new Color(0.55f, 0.45f, 0.62f, 0.85f);

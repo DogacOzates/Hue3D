@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom Settings")]
     public float zoomSpeed = 2f;
     public float minZoom = 8f;
-    public float maxZoom = 35f;
+    public float maxZoom = 55f;
     public float defaultZoom = 20f;
     
     [Header("Touch Settings")]

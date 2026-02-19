@@ -50,29 +50,57 @@ public class Cube : MonoBehaviour
     /// </summary>
     private void CreateSoftPastelMaterial()
     {
-        // URP Lit shader
+        // Shader.Find artık çalışır çünkü URP shader'lar Always Included Shaders'a eklendi
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-        if (shader == null)
+        
+        if (shader != null)
         {
-            shader = Shader.Find("Standard");
+            material = new Material(shader);
+        }
+        else
+        {
+            // Fallback: Mevcut renderer'ın default material'ini kopyala
+            if (meshRenderer != null && meshRenderer.sharedMaterial != null 
+                && meshRenderer.sharedMaterial.shader != null 
+                && meshRenderer.sharedMaterial.shader.name != "Hidden/InternalErrorShader")
+            {
+                material = new Material(meshRenderer.sharedMaterial);
+            }
+            else
+            {
+                // Son çare
+                Shader fallback = Shader.Find("Standard");
+                if (fallback == null) fallback = Shader.Find("Sprites/Default");
+                if (fallback != null)
+                    material = new Material(fallback);
+                else
+                {
+                    Debug.LogError("Cube: No shader found!");
+                    return;
+                }
+            }
         }
         
-        material = new Material(shader);
-        
         material.color = Color.gray;
-        material.SetColor("_BaseColor", Color.gray);
+        if (material.HasProperty("_BaseColor"))
+            material.SetColor("_BaseColor", Color.gray);
         
         // EYKA tarzı buzlu cam / frosted glass ayarları
-        material.SetFloat("_Smoothness", 0.75f);   // Yüksek parlaklık - cam efekti
-        material.SetFloat("_Metallic", 0.02f);      // Çok hafif metalik yansıma
+        if (material.HasProperty("_Smoothness"))
+            material.SetFloat("_Smoothness", 0.75f);
+        if (material.HasProperty("_Metallic"))
+            material.SetFloat("_Metallic", 0.02f);
         
-        // Specular highlights - yumuşak vurgu
-        material.SetFloat("_SpecularHighlights", 1f);
-        material.SetFloat("_EnvironmentReflections", 1f);
+        // Specular highlights
+        if (material.HasProperty("_SpecularHighlights"))
+            material.SetFloat("_SpecularHighlights", 1f);
+        if (material.HasProperty("_EnvironmentReflections"))
+            material.SetFloat("_EnvironmentReflections", 1f);
         
-        // Hafif emission ile renkleri canlı göster (EYKA'daki ışıldayan pastel efekti)
+        // Emission ile renkleri canlı ve parlak göster
         material.EnableKeyword("_EMISSION");
-        material.SetColor("_EmissionColor", Color.gray * 0.22f);
+        if (material.HasProperty("_EmissionColor"))
+            material.SetColor("_EmissionColor", Color.gray * 0.45f);
         
         meshRenderer.material = material;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -109,10 +137,12 @@ public class Cube : MonoBehaviour
             // EYKA tarzı: Rengi biraz daha açık/pastel yap
             Color pastelColor = Color.Lerp(color, Color.white, 0.12f);
             material.color = pastelColor;
-            material.SetColor("_BaseColor", pastelColor);
+            if (material.HasProperty("_BaseColor"))
+                material.SetColor("_BaseColor", pastelColor);
             
-            // Emission - rengin kendisinin hafif ışıması (EYKA glow efekti)
-            material.SetColor("_EmissionColor", color * 0.25f);
+            // Emission - rengin parlak ışıması
+            if (material.HasProperty("_EmissionColor"))
+                material.SetColor("_EmissionColor", color * 0.45f);
         }
     }
     

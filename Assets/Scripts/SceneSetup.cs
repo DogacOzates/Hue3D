@@ -16,6 +16,12 @@ public class SceneSetup : MonoBehaviour
     public int currentColorTheme = 0;  // 0=Lavender, 1=CoralBlush, 2=WarmSand, 3=FreshMint, 4=ArcticFrost, 5=SunsetRose
     public bool useGradientBackground = true;
     
+    [Header("Shader References (assign for builds)")]
+    [Tooltip("Assign URP Unlit shader here. If empty, will try Shader.Find at runtime.")]
+    public Shader unlitShader;
+    [Tooltip("Assign URP Particles/Unlit shader here. If empty, will try Shader.Find at runtime.")]
+    public Shader particleShader;
+    
     [Header("Created Objects")]
     public GameObject gameManagerObject;
     public GameObject puzzleGeneratorObject;
@@ -25,8 +31,24 @@ public class SceneSetup : MonoBehaviour
     public GameObject particleSystemObject;
     public Light mainLight;
     public Light fillLight;
+    public Light backLight;
+    public Light bottomLight;
     
     private Camera mainCam;
+    
+    /// <summary>
+    /// Build-safe shader bulma yöntemi. Önce Inspector referansını, sonra Shader.Find'ı dener.
+    /// </summary>
+    private Shader FindShaderSafe(params string[] shaderNames)
+    {
+        foreach (string name in shaderNames)
+        {
+            Shader s = Shader.Find(name);
+            if (s != null) return s;
+        }
+        Debug.LogError($"SceneSetup: None of the shaders found: {string.Join(", ", shaderNames)}");
+        return null;
+    }
     
     private void Start()
     {
@@ -52,6 +74,11 @@ public class SceneSetup : MonoBehaviour
     public void SetColorTheme(int themeIndex)
     {
         currentColorTheme = themeIndex % ColorPalettes.AllPalettes.Length;
+        
+        // mainCam henüz atanmamışsa bul
+        if (mainCam == null)
+            mainCam = Camera.main;
+        
         UpdateBackgroundForTheme(currentColorTheme);
     }
     
@@ -94,33 +121,58 @@ public class SceneSetup : MonoBehaviour
     /// </summary>
     private void SetupLighting()
     {
-        // Ana ışık - çok hafif, sadece minimal derinlik hissi için
+        // Ana ışık - ön üst sağdan
         if (mainLight == null)
         {
             GameObject lightObj = new GameObject("Main Light");
             mainLight = lightObj.AddComponent<Light>();
             mainLight.type = LightType.Directional;
-            mainLight.color = new Color(1f, 0.99f, 0.97f);  // Çok hafif warm white
-            mainLight.intensity = 0.25f;  // EYKA: yumuşak vurgu ışığı
+            mainLight.color = new Color(1f, 0.99f, 0.97f);
+            mainLight.intensity = 1.0f;
             mainLight.shadows = LightShadows.None;
-            lightObj.transform.rotation = Quaternion.Euler(45, -30, 0);
+            lightObj.transform.rotation = Quaternion.Euler(50, -30, 0);
         }
         
-        // Dolgu ışığı - karşı taraftan dengelemek için
+        // Dolgu ışığı - karşı taraftan (sol arka)
         if (fillLight == null)
         {
             GameObject fillObj = new GameObject("Fill Light");
             fillLight = fillObj.AddComponent<Light>();
             fillLight.type = LightType.Directional;
-            fillLight.color = new Color(0.97f, 0.97f, 1f);  // Çok hafif cool white
-            fillLight.intensity = 0.20f;
+            fillLight.color = new Color(0.97f, 0.97f, 1f);
+            fillLight.intensity = 0.8f;
             fillLight.shadows = LightShadows.None;
-            fillObj.transform.rotation = Quaternion.Euler(35, 150, 0);
+            fillObj.transform.rotation = Quaternion.Euler(40, 150, 0);
         }
         
-        // Ambient ayarları - EYKA: Çok güçlü ambient, her açıdan eşit aydınlatma
+        // Arka ışık - arkadan vurarak kenar çizgisini aydınlatır
+        if (backLight == null)
+        {
+            GameObject backObj = new GameObject("Back Light");
+            backLight = backObj.AddComponent<Light>();
+            backLight.type = LightType.Directional;
+            backLight.color = new Color(1f, 1f, 1f);
+            backLight.intensity = 0.6f;
+            backLight.shadows = LightShadows.None;
+            backObj.transform.rotation = Quaternion.Euler(30, -150, 0);
+        }
+        
+        // Alt ışık - alttan vurarak alt yüzleri aydınlatır
+        if (bottomLight == null)
+        {
+            GameObject bottomObj = new GameObject("Bottom Light");
+            bottomLight = bottomObj.AddComponent<Light>();
+            bottomLight.type = LightType.Directional;
+            bottomLight.color = new Color(0.98f, 0.98f, 1f);
+            bottomLight.intensity = 0.5f;
+            bottomLight.shadows = LightShadows.None;
+            bottomObj.transform.rotation = Quaternion.Euler(-45, 60, 0); // Alttan yukarı
+        }
+        
+        // Ambient ayarları - çok güçlü, her açıdan eşit aydınlatma
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.98f, 0.97f, 0.99f);  // Neredeyse beyaz ambient
+        RenderSettings.ambientLight = new Color(1f, 1f, 1f);
+        RenderSettings.ambientIntensity = 1.5f;
         
         RenderSettings.fog = false;
     }
@@ -230,12 +282,12 @@ public class SceneSetup : MonoBehaviour
             mainCam.backgroundColor = Color.Lerp(topColor, bottomColor, 0.3f);
         }
         
-        // Gradient quad oluştur (ekran boyutunda)
+        // Gradient quad oluştur (ekran boyutunda) - vertex color ile, shader bağımsız
         gradientBackgroundObject = new GameObject("GradientBackground");
         MeshFilter meshFilter = gradientBackgroundObject.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = gradientBackgroundObject.AddComponent<MeshRenderer>();
         
-        // Basit quad mesh
+        // Basit quad mesh - vertex color ile gradient
         Mesh mesh = new Mesh();
         mesh.vertices = new Vector3[]
         {
@@ -247,15 +299,47 @@ public class SceneSetup : MonoBehaviour
         mesh.triangles = new int[] { 0, 2, 1, 2, 3, 1 };
         mesh.uv = new Vector2[]
         {
-            new Vector2(0, 0),  // Sol alt
-            new Vector2(1, 0),  // Sağ alt
-            new Vector2(0, 1),  // Sol üst
-            new Vector2(1, 1)   // Sağ üst
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 1)
+        };
+        // Vertex colors ile gradient - shader'a bağımlı değil
+        mesh.colors = new Color[]
+        {
+            bottomColor,  // Sol alt
+            bottomColor,  // Sağ alt
+            topColor,     // Sol üst
+            topColor      // Sağ üst
         };
         mesh.RecalculateNormals();
         meshFilter.mesh = mesh;
         
-        // Gradient texture oluştur (vertex color yerine - URP uyumlu)
+        // Shader bul - URP shader'lar Always Included Shaders'a eklendi
+        Shader shader = unlitShader;
+        if (shader == null)
+        {
+            shader = FindShaderSafe(
+                "Universal Render Pipeline/Unlit",
+                "Unlit/Texture",
+                "Sprites/Default",
+                "UI/Default"
+            );
+        }
+        
+        if (shader == null)
+        {
+            // Son çare: gradient yerine solid color kullan
+            Debug.LogWarning("SceneSetup: No shader found for gradient background, using solid camera color.");
+            if (mainCam != null)
+                mainCam.backgroundColor = Color.Lerp(topColor, bottomColor, 0.5f);
+            Destroy(gradientBackgroundObject);
+            gradientBackgroundObject = null;
+            return;
+        }
+        
+        Material gradientMat = new Material(shader);
+        // Gradient texture oluştur (vertex color'a ek olarak texture ile de gradient sağla)
         Texture2D gradientTex = new Texture2D(1, 256, TextureFormat.RGBA32, false);
         for (int y = 0; y < 256; y++)
         {
@@ -267,14 +351,16 @@ public class SceneSetup : MonoBehaviour
         gradientTex.wrapMode = TextureWrapMode.Clamp;
         gradientTex.filterMode = FilterMode.Bilinear;
         
-        // URP Unlit material - texture ile gradient
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-        if (shader == null)
-            shader = Shader.Find("Unlit/Texture");
+        // Shader'a göre uygun property'leri ayarla
+        gradientMat.mainTexture = gradientTex;
+        gradientMat.SetTexture("_MainTex", gradientTex);
+        if (gradientMat.HasProperty("_BaseMap"))
+            gradientMat.SetTexture("_BaseMap", gradientTex);
+        if (gradientMat.HasProperty("_BaseColor"))
+            gradientMat.SetColor("_BaseColor", Color.white);
+        if (gradientMat.HasProperty("_Color"))
+            gradientMat.SetColor("_Color", Color.white);
         
-        Material gradientMat = new Material(shader);
-        gradientMat.SetTexture("_BaseMap", gradientTex);
-        gradientMat.SetColor("_BaseColor", Color.white);
         meshRenderer.material = gradientMat;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
@@ -473,20 +559,20 @@ public class SceneSetup : MonoBehaviour
     /// </summary>
     private Material CreateCircleParticleMaterial()
     {
-        // Önce URP Particles shader'ını dene (en iyi sonuç)
-        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+        // Önce Inspector'dan atanmış shader'ı dene
+        Shader shader = particleShader;
         
-        // URP yoksa standart particles shader
+        // Inspector'dan atanmamışsa Shader.Find dene
         if (shader == null)
-            shader = Shader.Find("Particles/Standard Unlit");
-        
-        // O da yoksa legacy shader
-        if (shader == null)
-            shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
+            shader = FindShaderSafe(
+                "Universal Render Pipeline/Particles/Unlit",
+                "Particles/Standard Unlit",
+                "Legacy Shaders/Particles/Alpha Blended",
+                "Sprites/Default");  // Son çare: her build'de bulunan shader
         
         if (shader == null)
         {
-            Debug.LogWarning("Particle shader not found!");
+            Debug.LogWarning("SceneSetup: Particle shader not found! Particles disabled.");
             return null;
         }
         
