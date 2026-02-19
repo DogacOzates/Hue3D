@@ -45,21 +45,15 @@ public class Cube : MonoBehaviour
     }
     
     /// <summary>
-    /// EYKA tarzı buzlu cam / frosted glass material oluşturur
-    /// Yüksek smoothness + hafif emission = parlak pastel görünüm
+    /// Lit material + çok yüksek emission = her açıdan parlak + hafif 3D derinlik
     /// </summary>
     private void CreateSoftPastelMaterial()
     {
-        // Shader.Find artık çalışır çünkü URP shader'lar Always Included Shaders'a eklendi
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
         
-        if (shader != null)
+        if (shader == null)
         {
-            material = new Material(shader);
-        }
-        else
-        {
-            // Fallback: Mevcut renderer'ın default material'ini kopyala
+            // Fallback
             if (meshRenderer != null && meshRenderer.sharedMaterial != null 
                 && meshRenderer.sharedMaterial.shader != null 
                 && meshRenderer.sharedMaterial.shader.name != "Hidden/InternalErrorShader")
@@ -68,8 +62,8 @@ public class Cube : MonoBehaviour
             }
             else
             {
-                // Son çare
-                Shader fallback = Shader.Find("Standard");
+                Shader fallback = Shader.Find("Universal Render Pipeline/Unlit");
+                if (fallback == null) fallback = Shader.Find("Unlit/Color");
                 if (fallback == null) fallback = Shader.Find("Sprites/Default");
                 if (fallback != null)
                     material = new Material(fallback);
@@ -80,27 +74,26 @@ public class Cube : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            material = new Material(shader);
+        }
         
-        material.color = Color.gray;
+        // Parlak beyaz başlangıç
+        material.color = Color.white;
         if (material.HasProperty("_BaseColor"))
-            material.SetColor("_BaseColor", Color.gray);
+            material.SetColor("_BaseColor", Color.white);
         
-        // EYKA tarzı buzlu cam / frosted glass ayarları
+        // Yüzey ayarları: düşük metalik, orta pürüzsüzlük
         if (material.HasProperty("_Smoothness"))
-            material.SetFloat("_Smoothness", 0.75f);
+            material.SetFloat("_Smoothness", 0.5f);
         if (material.HasProperty("_Metallic"))
-            material.SetFloat("_Metallic", 0.02f);
+            material.SetFloat("_Metallic", 0.0f);
         
-        // Specular highlights
-        if (material.HasProperty("_SpecularHighlights"))
-            material.SetFloat("_SpecularHighlights", 1f);
-        if (material.HasProperty("_EnvironmentReflections"))
-            material.SetFloat("_EnvironmentReflections", 1f);
-        
-        // Emission ile renkleri canlı ve parlak göster
+        // Çok yüksek emission - küpler kendi ışığını yaydığı için karanlık yüz olmaz
         material.EnableKeyword("_EMISSION");
         if (material.HasProperty("_EmissionColor"))
-            material.SetColor("_EmissionColor", Color.gray * 0.45f);
+            material.SetColor("_EmissionColor", Color.white * 1.2f);
         
         meshRenderer.material = material;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -127,22 +120,22 @@ public class Cube : MonoBehaviour
     }
     
     /// <summary>
-    /// Küpün rengini ayarlar - EYKA tarzı pastel renk + buzlu cam emission
+    /// Küpün rengini ayarlar - yüksek emission ile parlak, aydınlık
     /// </summary>
     public void SetColor(Color color)
     {
         currentColor = color;
         if (material != null)
         {
-            // EYKA tarzı: Rengi biraz daha açık/pastel yap
-            Color pastelColor = Color.Lerp(color, Color.white, 0.12f);
-            material.color = pastelColor;
+            // Rengi beyaza yaklaştır
+            Color brightColor = Color.Lerp(color, Color.white, 0.18f);
+            material.color = brightColor;
             if (material.HasProperty("_BaseColor"))
-                material.SetColor("_BaseColor", pastelColor);
+                material.SetColor("_BaseColor", brightColor);
             
-            // Emission - rengin parlak ışıması
+            // Çok yüksek emission - küp kendi rengini yayar, karanlık yüz kalmaz
             if (material.HasProperty("_EmissionColor"))
-                material.SetColor("_EmissionColor", color * 0.45f);
+                material.SetColor("_EmissionColor", brightColor * 0.9f);
         }
     }
     

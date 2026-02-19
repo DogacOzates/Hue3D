@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
     // Animation state
     private bool isAnimating;
     private Coroutine spawnAnimCoroutine;
+    private Coroutine shuffleCoroutine;
     
     private void Awake()
     {
@@ -238,8 +239,13 @@ public class GameManager : MonoBehaviour
         
         UpdateUI();
         
-        // Spawn animasyonu başlat
+        // Önceki animasyonları durdur
+        if (shuffleCoroutine != null) StopCoroutine(shuffleCoroutine);
+        shuffleCoroutine = null;
         if (spawnAnimCoroutine != null) StopCoroutine(spawnAnimCoroutine);
+        isAnimating = false;
+        
+        // Spawn animasyonu başlat
         spawnAnimCoroutine = StartCoroutine(SpawnCubesAnimation());
     }
     
@@ -259,7 +265,7 @@ public class GameManager : MonoBehaviour
             mobileUI.HideTapToStart();
         }
         
-        StartCoroutine(ShuffleTransitionAnimation());
+        shuffleCoroutine = StartCoroutine(ShuffleTransitionAnimation());
     }
     
     /// <summary>
@@ -287,7 +293,9 @@ public class GameManager : MonoBehaviour
         
         // Dıştan içe küçült
         var shrinkOrder = new List<Cube>(cubes);
+        shrinkOrder.RemoveAll(c => c == null);
         shrinkOrder.Sort((a, b) => {
+            if (a == null || b == null) return 0;
             float distA = Vector3.Distance(a.transform.position, center);
             float distB = Vector3.Distance(b.transform.position, center);
             return distB.CompareTo(distA);
@@ -298,7 +306,7 @@ public class GameManager : MonoBehaviour
         {
             if (shrinkOrder[i] != null)
             {
-                StartCoroutine(AnimateCubeScale(shrinkOrder[i].transform, Vector3.one * 0.98f, Vector3.zero, 0.18f));
+                StartCoroutine(AnimateCubeScale(shrinkOrder[i].transform, Vector3.one * 0.98f, Vector3.one * 0.001f, 0.18f));
             }
             if ((i + 1) % batchSize == 0)
             {
@@ -313,7 +321,9 @@ public class GameManager : MonoBehaviour
         
         // İçten dışa büyüt
         var growOrder = new List<Cube>(cubes);
+        growOrder.RemoveAll(c => c == null);
         growOrder.Sort((a, b) => {
+            if (a == null || b == null) return 0;
             float distA = Vector3.Distance(a.transform.position, center);
             float distB = Vector3.Distance(b.transform.position, center);
             return distA.CompareTo(distB);
@@ -323,7 +333,7 @@ public class GameManager : MonoBehaviour
         {
             if (growOrder[i] != null)
             {
-                StartCoroutine(AnimateCubeScale(growOrder[i].transform, Vector3.zero, Vector3.one * 0.98f, 0.2f));
+                StartCoroutine(AnimateCubeScale(growOrder[i].transform, Vector3.one * 0.001f, Vector3.one * 0.98f, 0.2f));
             }
             if ((i + 1) % batchSize == 0)
             {
@@ -496,7 +506,9 @@ public class GameManager : MonoBehaviour
         }
         if (cubes.Count > 0) center /= cubes.Count;
         
+        cubes.RemoveAll(c => c == null);
         cubes.Sort((a, b) => {
+            if (a == null || b == null) return 0;
             float distA = Vector3.Distance(a.transform.position, center);
             float distB = Vector3.Distance(b.transform.position, center);
             return distB.CompareTo(distA); // Dıştan içe
@@ -508,7 +520,7 @@ public class GameManager : MonoBehaviour
         {
             if (cubes[i] != null)
             {
-                StartCoroutine(AnimateCubeScale(cubes[i].transform, Vector3.one * 0.98f, Vector3.zero, 0.25f));
+                StartCoroutine(AnimateCubeScale(cubes[i].transform, Vector3.one * 0.98f, Vector3.one * 0.001f, 0.25f));
             }
             
             if ((i + 1) % batchSize == 0)
@@ -540,11 +552,12 @@ public class GameManager : MonoBehaviour
         }
         
         // Tüm küpleri başlangıçta görünmez yap
+        Vector3 tinyScale = Vector3.one * 0.001f;
         foreach (var cube in cubes)
         {
             if (cube != null)
             {
-                cube.transform.localScale = Vector3.zero;
+                cube.transform.localScale = tinyScale;
             }
         }
         
@@ -556,7 +569,9 @@ public class GameManager : MonoBehaviour
         }
         center /= cubes.Count;
         
+        cubes.RemoveAll(c => c == null);
         cubes.Sort((a, b) => {
+            if (a == null || b == null) return 0;
             float distA = Vector3.Distance(a.transform.position, center);
             float distB = Vector3.Distance(b.transform.position, center);
             return distA.CompareTo(distB); // İçten dışa
@@ -568,7 +583,7 @@ public class GameManager : MonoBehaviour
         {
             if (cubes[i] != null)
             {
-                StartCoroutine(AnimateCubeScale(cubes[i].transform, Vector3.zero, Vector3.one * 0.98f, 0.2f));
+                StartCoroutine(AnimateCubeScale(cubes[i].transform, Vector3.one * 0.001f, Vector3.one * 0.98f, 0.2f));
             }
             
             if ((i + 1) % batchSize == 0)

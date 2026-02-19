@@ -91,7 +91,7 @@ public static class LevelManager
             // ============ TUTORIAL ============
             
             // Level 0: Tutorial - 5 küp yan yana (en basit)
-            CreateLevelWithFixed(0, "Tutorial", 0, "Learn to play",
+            CreateLevelWithFixed(0, "Tutorial", 3, "Learn to play",
                 new Vector3Int[] {
                     new Vector3Int(0,0,0), new Vector3Int(1,0,0), new Vector3Int(2,0,0), 
                     new Vector3Int(3,0,0), new Vector3Int(4,0,0)
@@ -101,17 +101,17 @@ public static class LevelManager
             // ============ BÖLÜM 1: GİRİŞ (1-10) ============
 
             // Level 1: 3x3 grid - öğretici (9 küp)
-            CreateLevelWithFixed(1, "First Touch", 0, "3x3 intro",
+            CreateLevelWithFixed(1, "First Touch", 1, "3x3 intro",
                 GenerateGrid(3, 3, 1),
                 GetCorners(3, 3, 1)),
 
             // Level 2: 4x3 grid (12 küp)
-            CreateLevelWithFixed(2, "Canvas", 1, "4x3 rectangle",
+            CreateLevelWithFixed(2, "Canvas", 4, "4x3 rectangle",
                 GenerateGrid(4, 3, 1),
                 GetCorners(4, 3, 1)),
 
             // Level 3: 5x4 grid (20 küp)
-            CreateLevelWithFixed(3, "Board", 2, "5x4 wide rectangle",
+            CreateLevelWithFixed(3, "Board", 7, "5x4 wide rectangle",
                 GenerateGrid(5, 4, 1),
                 GetCorners(5, 4, 1)),
 
@@ -127,7 +127,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(3,0,0), new Vector3Int(1,2,0), new Vector3Int(5,2,0), new Vector3Int(3,4,0) }),
 
             // Level 5: Ok işareti (15 küp)
-            CreateLevelWithFixed(5, "Arrow", 4, "Right arrow",
+            CreateLevelWithFixed(5, "Arrow", 2, "Right arrow",
                 new Vector3Int[] {
                     // Gövde
                     new Vector3Int(0,2,0), new Vector3Int(1,2,0), new Vector3Int(2,2,0), new Vector3Int(3,2,0),
@@ -140,7 +140,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(0,2,0), new Vector3Int(0,3,0), new Vector3Int(6,2,0), new Vector3Int(4,4,0) }),
 
             // Level 6: Hilal (14 küp)
-            CreateLevelWithFixed(6, "Crescent", 5, "Crescent shape",
+            CreateLevelWithFixed(6, "Crescent", 10, "Crescent shape",
                 new Vector3Int[] {
                     new Vector3Int(1,0,0), new Vector3Int(2,0,0), new Vector3Int(3,0,0),
                     new Vector3Int(0,1,0), new Vector3Int(1,1,0),
@@ -153,7 +153,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(0,0,0), new Vector3Int(3,0,0), new Vector3Int(0,3,0), new Vector3Int(3,5,0) }),
 
             // Level 7: Yıldırım (16 küp)
-            CreateLevelWithFixed(7, "Lightning", 0, "Lightning shape",
+            CreateLevelWithFixed(7, "Lightning", 13, "Lightning shape",
                 new Vector3Int[] {
                     new Vector3Int(2,5,0), new Vector3Int(3,5,0), new Vector3Int(4,5,0),
                     new Vector3Int(2,4,0), new Vector3Int(3,4,0),
@@ -165,7 +165,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(0,0,0), new Vector3Int(2,0,0), new Vector3Int(2,5,0), new Vector3Int(4,5,0) }),
 
             // Level 8: Spiral 2D (18 küp)
-            CreateLevelWithFixed(8, "Spiral", 1, "Flat spiral",
+            CreateLevelWithFixed(8, "Spiral", 6, "Flat spiral",
                 new Vector3Int[] {
                     // Dış kenar saat yönü
                     new Vector3Int(0,0,0), new Vector3Int(1,0,0), new Vector3Int(2,0,0), new Vector3Int(3,0,0), new Vector3Int(4,0,0),
@@ -180,7 +180,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(0,0,0), new Vector3Int(4,0,0), new Vector3Int(0,3,0), new Vector3Int(2,2,0) }),
 
             // Level 9: Kalp (19 küp)
-            CreateLevelWithFixed(9, "Heart", 2, "Heart shape",
+            CreateLevelWithFixed(9, "Heart", 14, "Heart shape",
                 new Vector3Int[] {
                     // Alt uç
                     new Vector3Int(3,0,0),
@@ -195,7 +195,7 @@ public static class LevelManager
                 new Vector3Int[] { new Vector3Int(3,0,0), new Vector3Int(0,4,0), new Vector3Int(6,4,0), new Vector3Int(3,2,0) }),
 
             // Level 10: Yıldız (22 küp)
-            CreateLevelWithFixed(10, "Star", 3, "5-pointed star",
+            CreateLevelWithFixed(10, "Star", 11, "5-pointed star",
                 new Vector3Int[] {
                     // Merkez
                     new Vector3Int(3,2,0), new Vector3Int(3,3,0), new Vector3Int(2,2,0), new Vector3Int(4,2,0), new Vector3Int(2,3,0), new Vector3Int(4,3,0),

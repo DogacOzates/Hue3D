@@ -533,6 +533,13 @@ public class PuzzleGenerator : MonoBehaviour
         
         if (movableCubes.Count < 2) return;
         
+        // Hedef renkleri kaydet (çözülmüş durum)
+        List<Color> targetColors = new List<Color>();
+        foreach (var cube in movableCubes)
+        {
+            targetColors.Add(cube.targetColor);
+        }
+        
         // Renkleri topla
         List<Color> colors = new List<Color>();
         foreach (var cube in movableCubes)
@@ -540,13 +547,52 @@ public class PuzzleGenerator : MonoBehaviour
             colors.Add(cube.currentColor);
         }
         
-        // Fisher-Yates shuffle
-        for (int i = colors.Count - 1; i > 0; i--)
+        int maxAttempts = 20;
+        int attempt = 0;
+        bool isSolved = true;
+        
+        do
         {
-            int j = Random.Range(0, i + 1);
-            Color temp = colors[i];
-            colors[i] = colors[j];
-            colors[j] = temp;
+            // Fisher-Yates shuffle
+            for (int i = colors.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                Color temp = colors[i];
+                colors[i] = colors[j];
+                colors[j] = temp;
+            }
+            
+            // Çözülmüş durumla aynı mı kontrol et
+            isSolved = true;
+            int correctCount = 0;
+            for (int i = 0; i < colors.Count; i++)
+            {
+                float dist = Mathf.Sqrt(
+                    Mathf.Pow(colors[i].r - targetColors[i].r, 2) +
+                    Mathf.Pow(colors[i].g - targetColors[i].g, 2) +
+                    Mathf.Pow(colors[i].b - targetColors[i].b, 2)
+                );
+                if (dist < 0.01f)
+                {
+                    correctCount++;
+                }
+            }
+            
+            // En az %30 küp yanlış pozisyonda olmalı
+            float correctRatio = (float)correctCount / colors.Count;
+            isSolved = correctRatio > 0.7f;
+            
+            attempt++;
+        }
+        while (isSolved && attempt < maxAttempts);
+        
+        if (isSolved)
+        {
+            // Hâlâ çözülmüş durumda - basit swap yap
+            Color temp = colors[0];
+            colors[0] = colors[colors.Count - 1];
+            colors[colors.Count - 1] = temp;
+            Debug.LogWarning("[PuzzleGenerator] Shuffle could not avoid solved state, forced swap.");
         }
         
         // Karıştırılmış renkleri ata
@@ -554,6 +600,8 @@ public class PuzzleGenerator : MonoBehaviour
         {
             movableCubes[i].SetColor(colors[i]);
         }
+        
+        Debug.Log($"[PuzzleGenerator] ShuffleColors: {movableCubes.Count} cubes shuffled in {attempt} attempt(s).");
     }
     
     /// <summary>

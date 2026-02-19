@@ -121,58 +121,89 @@ public class SceneSetup : MonoBehaviour
     /// </summary>
     private void SetupLighting()
     {
-        // Ana ışık - ön üst sağdan
-        if (mainLight == null)
+        // Sahnedeki mevcut ışıkları temizle (eski ayarlarla kalmasın)
+        Light[] existingLights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+        foreach (var light in existingLights)
+        {
+            if (light != null && light.gameObject != null)
+            {
+                DestroyImmediate(light.gameObject);
+            }
+        }
+        mainLight = null;
+        fillLight = null;
+        backLight = null;
+        bottomLight = null;
+        
+        // Ana ışık - ön üst sağdan (çok güçlü)
         {
             GameObject lightObj = new GameObject("Main Light");
             mainLight = lightObj.AddComponent<Light>();
             mainLight.type = LightType.Directional;
-            mainLight.color = new Color(1f, 0.99f, 0.97f);
-            mainLight.intensity = 1.0f;
+            mainLight.color = Color.white;
+            mainLight.intensity = 2.5f;
             mainLight.shadows = LightShadows.None;
             lightObj.transform.rotation = Quaternion.Euler(50, -30, 0);
         }
         
         // Dolgu ışığı - karşı taraftan (sol arka)
-        if (fillLight == null)
         {
             GameObject fillObj = new GameObject("Fill Light");
             fillLight = fillObj.AddComponent<Light>();
             fillLight.type = LightType.Directional;
-            fillLight.color = new Color(0.97f, 0.97f, 1f);
-            fillLight.intensity = 0.8f;
+            fillLight.color = Color.white;
+            fillLight.intensity = 2.0f;
             fillLight.shadows = LightShadows.None;
             fillObj.transform.rotation = Quaternion.Euler(40, 150, 0);
         }
         
         // Arka ışık - arkadan vurarak kenar çizgisini aydınlatır
-        if (backLight == null)
         {
             GameObject backObj = new GameObject("Back Light");
             backLight = backObj.AddComponent<Light>();
             backLight.type = LightType.Directional;
-            backLight.color = new Color(1f, 1f, 1f);
-            backLight.intensity = 0.6f;
+            backLight.color = Color.white;
+            backLight.intensity = 1.8f;
             backLight.shadows = LightShadows.None;
             backObj.transform.rotation = Quaternion.Euler(30, -150, 0);
         }
         
         // Alt ışık - alttan vurarak alt yüzleri aydınlatır
-        if (bottomLight == null)
         {
             GameObject bottomObj = new GameObject("Bottom Light");
             bottomLight = bottomObj.AddComponent<Light>();
             bottomLight.type = LightType.Directional;
-            bottomLight.color = new Color(0.98f, 0.98f, 1f);
-            bottomLight.intensity = 0.5f;
+            bottomLight.color = Color.white;
+            bottomLight.intensity = 1.5f;
             bottomLight.shadows = LightShadows.None;
-            bottomObj.transform.rotation = Quaternion.Euler(-45, 60, 0); // Alttan yukarı
+            bottomObj.transform.rotation = Quaternion.Euler(-45, 60, 0);
         }
         
-        // Ambient ayarları - çok güçlü, her açıdan eşit aydınlatma
+        // Ek ışıklar - tam kapsama için
+        {
+            // Sağ ışık
+            GameObject rightObj = new GameObject("Right Light");
+            Light rightLight = rightObj.AddComponent<Light>();
+            rightLight.type = LightType.Directional;
+            rightLight.color = Color.white;
+            rightLight.intensity = 1.5f;
+            rightLight.shadows = LightShadows.None;
+            rightObj.transform.rotation = Quaternion.Euler(10, -90, 0);
+            
+            // Sol ışık
+            GameObject leftObj = new GameObject("Left Light");
+            Light leftLight = leftObj.AddComponent<Light>();
+            leftLight.type = LightType.Directional;
+            leftLight.color = Color.white;
+            leftLight.intensity = 1.5f;
+            leftLight.shadows = LightShadows.None;
+            leftObj.transform.rotation = Quaternion.Euler(10, 90, 0);
+        }
+        
+        // Ambient ayarları - maksimum aydınlatma
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(1f, 1f, 1f);
-        RenderSettings.ambientIntensity = 1.5f;
+        RenderSettings.ambientLight = Color.white;
+        RenderSettings.ambientIntensity = 2.5f;
         
         RenderSettings.fog = false;
     }
@@ -275,11 +306,11 @@ public class SceneSetup : MonoBehaviour
         // EYKA tarzı gradient renkleri al (beyaz → yumuşak pastel)
         var (topColor, bottomColor) = ColorPalettes.GetBackgroundGradient(themeIndex);
         
-        // Kamera solid color'ı gradient'in üst kısmına yakın olsun (beyaza yakın)
+        // Kamera solid color'ı saf beyaz - gradient üstü ile uyumlu
         if (mainCam != null)
         {
             mainCam.clearFlags = CameraClearFlags.SolidColor;
-            mainCam.backgroundColor = Color.Lerp(topColor, bottomColor, 0.3f);
+            mainCam.backgroundColor = Color.white;
         }
         
         // Gradient quad oluştur (ekran boyutunda) - vertex color ile, shader bağımsız
@@ -339,12 +370,24 @@ public class SceneSetup : MonoBehaviour
         }
         
         Material gradientMat = new Material(shader);
-        // Gradient texture oluştur (vertex color'a ek olarak texture ile de gradient sağla)
+        // Gradient texture oluştur - üst kısım uzun beyaz, alt yarıda keskin geçiş
         Texture2D gradientTex = new Texture2D(1, 256, TextureFormat.RGBA32, false);
         for (int y = 0; y < 256; y++)
         {
-            float t = y / 255f;
-            Color c = Color.Lerp(bottomColor, topColor, t);
+            float t = y / 255f; // 0=alt, 1=üst
+            // Üst %50 saf beyaz kalsın, geçiş alt %50'de olsun (keskin)
+            float remapped;
+            if (t > 0.5f)
+            {
+                remapped = 1.0f; // Üst %50 tamamen beyaz
+            }
+            else
+            {
+                remapped = t / 0.5f; // Alt %50'de 0→1 geçiş
+                // Çok keskin geçiş (cubic curve)
+                remapped = remapped * remapped * remapped;
+            }
+            Color c = Color.Lerp(bottomColor, topColor, remapped);
             gradientTex.SetPixel(0, y, c);
         }
         gradientTex.Apply();

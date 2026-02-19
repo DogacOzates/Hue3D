@@ -46,149 +46,150 @@ public static class ColorPalettes
     // ============ I LOVE HUE - 4 KÖŞE RENK PALETLERİ ============
     // Her palette: [topLeft, topRight, bottomLeft, bottomRight]
     // Bilinear interpolation ile 2D gradient oluşturulur
+    // Yüksek kontrast köşeler = net renk geçişi
     
-    // 0: Sunset Warmth - Sarı → Pembe → Turuncu → Mor geçişi
+    // 0: Sunset - Sarı → Kırmızı → Turuncu → Mor (sıcak kontrast)
     public static readonly Color[] SunsetWarmth = new Color[]
     {
-        new Color(0.98f, 0.92f, 0.35f),  // topLeft:     Bright yellow
-        new Color(0.92f, 0.35f, 0.55f),  // topRight:    Hot pink
-        new Color(0.98f, 0.65f, 0.25f),  // bottomLeft:  Tangerine orange
-        new Color(0.65f, 0.30f, 0.72f),  // bottomRight: Purple
+        new Color(1.00f, 0.90f, 0.20f),  // topLeft:     Pure yellow
+        new Color(0.95f, 0.20f, 0.30f),  // topRight:    Vivid red
+        new Color(1.00f, 0.55f, 0.10f),  // bottomLeft:  Orange
+        new Color(0.70f, 0.15f, 0.70f),  // bottomRight: Purple
     };
     
-    // 1: Ocean Depths - Turkuaz → Lacivert → Yeşil → Mor
+    // 1: Ocean - Cyan → Lacivert → Yeşil → Mor (soğuk derin)
     public static readonly Color[] OceanDepths = new Color[]
     {
-        new Color(0.30f, 0.85f, 0.82f),  // topLeft:     Bright turquoise
-        new Color(0.20f, 0.32f, 0.78f),  // topRight:    Royal blue
-        new Color(0.35f, 0.75f, 0.45f),  // bottomLeft:  Sea green
-        new Color(0.48f, 0.28f, 0.68f),  // bottomRight: Deep violet
+        new Color(0.10f, 0.90f, 0.95f),  // topLeft:     Bright cyan
+        new Color(0.15f, 0.25f, 0.90f),  // topRight:    Deep blue
+        new Color(0.10f, 0.80f, 0.40f),  // bottomLeft:  Sea green
+        new Color(0.55f, 0.20f, 0.85f),  // bottomRight: Violet
     };
     
-    // 2: Spring Meadow - Açık yeşil → Sarı → Turkuaz → Pembe
+    // 2: Spring - Yeşil → Sarı → Turkuaz → Pembe (taze canlı)
     public static readonly Color[] SpringMeadow = new Color[]
     {
-        new Color(0.60f, 0.90f, 0.40f),  // topLeft:     Lime green
-        new Color(0.98f, 0.88f, 0.30f),  // topRight:    Sunny yellow
-        new Color(0.25f, 0.78f, 0.72f),  // bottomLeft:  Teal
-        new Color(0.95f, 0.55f, 0.65f),  // bottomRight: Rose pink
+        new Color(0.30f, 0.92f, 0.20f),  // topLeft:     Vivid green
+        new Color(1.00f, 0.95f, 0.15f),  // topRight:    Bright yellow
+        new Color(0.10f, 0.85f, 0.75f),  // bottomLeft:  Teal
+        new Color(0.98f, 0.35f, 0.55f),  // bottomRight: Hot pink
     };
     
-    // 3: Berry Garden - Pembe → Mor → Kırmızı → Mavi
+    // 3: Berry - Pembe → Mor → Kırmızı → Mavi (canlı kontrast)
     public static readonly Color[] BerryGarden = new Color[]
     {
-        new Color(0.95f, 0.55f, 0.70f),  // topLeft:     Bubblegum pink
-        new Color(0.55f, 0.30f, 0.78f),  // topRight:    Grape purple
-        new Color(0.88f, 0.25f, 0.35f),  // bottomLeft:  Cherry red
-        new Color(0.35f, 0.45f, 0.85f),  // bottomRight: Cornflower blue
+        new Color(0.98f, 0.30f, 0.60f),  // topLeft:     Hot pink
+        new Color(0.50f, 0.15f, 0.90f),  // topRight:    Vivid purple
+        new Color(0.92f, 0.15f, 0.20f),  // bottomLeft:  Cherry red
+        new Color(0.20f, 0.45f, 0.95f),  // bottomRight: Bright blue
     };
     
-    // 4: Desert Dusk - Turuncu → Pembe → Sarı → Mor
+    // 4: Desert - Altın → Pembe → Yeşil → Turuncu (sıcak toprak)
     public static readonly Color[] DesertDusk = new Color[]
     {
-        new Color(0.95f, 0.62f, 0.28f),  // topLeft:     Deep orange
-        new Color(0.85f, 0.42f, 0.62f),  // topRight:    Dusty rose
-        new Color(0.95f, 0.88f, 0.45f),  // bottomLeft:  Gold
-        new Color(0.58f, 0.35f, 0.65f),  // bottomRight: Plum
+        new Color(0.98f, 0.80f, 0.15f),  // topLeft:     Gold
+        new Color(0.92f, 0.35f, 0.50f),  // topRight:    Rose
+        new Color(0.55f, 0.78f, 0.25f),  // bottomLeft:  Olive green
+        new Color(0.95f, 0.50f, 0.15f),  // bottomRight: Deep orange
     };
     
-    // 5: Northern Lights - Yeşil → Mavi → Mor → Pembe
+    // 5: Aurora - Yeşil → Mavi → Mor → Pembe (neon aurora)
     public static readonly Color[] NorthernLights = new Color[]
     {
-        new Color(0.30f, 0.88f, 0.55f),  // topLeft:     Aurora green
-        new Color(0.35f, 0.55f, 0.92f),  // topRight:    Electric blue
-        new Color(0.62f, 0.30f, 0.82f),  // bottomLeft:  Violet
-        new Color(0.90f, 0.50f, 0.72f),  // bottomRight: Orchid pink
+        new Color(0.15f, 0.95f, 0.40f),  // topLeft:     Neon green
+        new Color(0.15f, 0.50f, 0.98f),  // topRight:    Electric blue
+        new Color(0.70f, 0.10f, 0.90f),  // bottomLeft:  Neon violet
+        new Color(0.98f, 0.30f, 0.65f),  // bottomRight: Magenta
     };
     
-    // 6: Autumn Forest - Kırmızı → Sarı → Yeşil → Turuncu
+    // 6: Autumn - Kırmızı → Sarı → Yeşil → Turuncu (sonbahar yaprak)
     public static readonly Color[] AutumnForest = new Color[]
     {
-        new Color(0.82f, 0.22f, 0.18f),  // topLeft:     Fire red
-        new Color(0.95f, 0.85f, 0.25f),  // topRight:    Bright yellow
-        new Color(0.28f, 0.62f, 0.32f),  // bottomLeft:  Forest green
-        new Color(0.92f, 0.58f, 0.18f),  // bottomRight: Amber orange
+        new Color(0.90f, 0.15f, 0.10f),  // topLeft:     Fire red
+        new Color(1.00f, 0.88f, 0.10f),  // topRight:    Bright yellow
+        new Color(0.20f, 0.70f, 0.20f),  // bottomLeft:  Forest green
+        new Color(0.98f, 0.55f, 0.08f),  // bottomRight: Amber
     };
     
-    // 7: Tropical Sunrise - Sarı → Pembe → Turuncu → Turkuaz
+    // 7: Tropical - Limon → Karpuz → Mango → Turkuaz (tropik meyve)
     public static readonly Color[] TropicalSunrise = new Color[]
     {
-        new Color(0.98f, 0.95f, 0.40f),  // topLeft:     Lemon yellow
-        new Color(0.95f, 0.38f, 0.58f),  // topRight:    Tropical pink
-        new Color(0.98f, 0.55f, 0.20f),  // bottomLeft:  Mango orange
-        new Color(0.22f, 0.82f, 0.78f),  // bottomRight: Tropical teal
+        new Color(1.00f, 0.95f, 0.15f),  // topLeft:     Lemon
+        new Color(0.98f, 0.20f, 0.45f),  // topRight:    Watermelon
+        new Color(1.00f, 0.60f, 0.08f),  // bottomLeft:  Mango
+        new Color(0.08f, 0.90f, 0.85f),  // bottomRight: Turquoise
     };
     
-    // 8: Lavender Fields - Mor → Pembe → Mavi → Yeşil
+    // 8: Lavender - Mor → Pembe → Mavi → Yeşil (pastel canlı)
     public static readonly Color[] LavenderFields = new Color[]
     {
-        new Color(0.72f, 0.45f, 0.88f),  // topLeft:     Rich lavender
-        new Color(0.95f, 0.62f, 0.72f),  // topRight:    Soft pink
-        new Color(0.38f, 0.52f, 0.85f),  // bottomLeft:  Periwinkle blue
-        new Color(0.55f, 0.82f, 0.62f),  // bottomRight: Sage green
+        new Color(0.72f, 0.30f, 0.95f),  // topLeft:     Rich purple
+        new Color(0.98f, 0.45f, 0.60f),  // topRight:    Rose pink
+        new Color(0.20f, 0.45f, 0.92f),  // bottomLeft:  Royal blue
+        new Color(0.30f, 0.90f, 0.50f),  // bottomRight: Mint green
     };
     
-    // 9: Midnight City - Mavi → Mor → Turuncu → Pembe
+    // 9: Midnight - Lacivert → Mor → Turuncu → Kırmızı (gece şehir)
     public static readonly Color[] MidnightCity = new Color[]
     {
-        new Color(0.18f, 0.28f, 0.62f),  // topLeft:     Deep navy
-        new Color(0.55f, 0.22f, 0.58f),  // topRight:    Dark magenta
-        new Color(0.88f, 0.55f, 0.25f),  // bottomLeft:  Warm amber
-        new Color(0.82f, 0.38f, 0.52f),  // bottomRight: Berry pink
+        new Color(0.10f, 0.18f, 0.75f),  // topLeft:     Dark blue
+        new Color(0.65f, 0.12f, 0.70f),  // topRight:    Deep magenta
+        new Color(0.98f, 0.65f, 0.10f),  // bottomLeft:  Amber gold
+        new Color(0.92f, 0.20f, 0.35f),  // bottomRight: Crimson
     };
     
-    // 10: Coral Reef - Mercan → Turkuaz → Pembe → Mavi
+    // 10: Coral - Mercan → Turkuaz → Pembe → Mavi (deniz kontrast)
     public static readonly Color[] CoralReef = new Color[]
     {
-        new Color(0.98f, 0.48f, 0.42f),  // topLeft:     Coral red
-        new Color(0.25f, 0.85f, 0.78f),  // topRight:    Bright turquoise
-        new Color(0.92f, 0.60f, 0.72f),  // bottomLeft:  Blush pink
-        new Color(0.28f, 0.55f, 0.88f),  // bottomRight: Ocean blue
+        new Color(0.98f, 0.35f, 0.28f),  // topLeft:     Bright coral
+        new Color(0.08f, 0.92f, 0.85f),  // topRight:    Aqua
+        new Color(0.95f, 0.55f, 0.70f),  // bottomLeft:  Salmon
+        new Color(0.15f, 0.50f, 0.95f),  // bottomRight: Azure
     };
     
-    // 11: Golden Hour - Sarı → Kırmızı → Yeşil → Turuncu
+    // 11: Golden - Altın → Kırmızı → Yeşil → Turuncu (zengin sıcak)
     public static readonly Color[] GoldenHour = new Color[]
     {
-        new Color(0.98f, 0.90f, 0.35f),  // topLeft:     Bright gold
-        new Color(0.88f, 0.30f, 0.28f),  // topRight:    Crimson
-        new Color(0.48f, 0.78f, 0.35f),  // bottomLeft:  Grass green
-        new Color(0.95f, 0.62f, 0.22f),  // bottomRight: Deep amber
+        new Color(1.00f, 0.88f, 0.15f),  // topLeft:     Rich gold
+        new Color(0.92f, 0.18f, 0.15f),  // topRight:    Red
+        new Color(0.30f, 0.85f, 0.25f),  // bottomLeft:  Lime green
+        new Color(0.98f, 0.60f, 0.10f),  // bottomRight: Deep amber
     };
     
-    // 12: Arctic Ice - Açık mavi → Beyaz → Mor → Yeşil
+    // 12: Arctic - Buz mavi → Beyaz → Mor → Turkuaz (buz kristal)
     public static readonly Color[] ArcticIce = new Color[]
     {
-        new Color(0.65f, 0.85f, 0.98f),  // topLeft:     Ice blue
-        new Color(0.92f, 0.90f, 0.95f),  // topRight:    Snow white
-        new Color(0.55f, 0.42f, 0.78f),  // bottomLeft:  Frozen violet
-        new Color(0.40f, 0.82f, 0.72f),  // bottomRight: Glacial teal
+        new Color(0.45f, 0.78f, 0.98f),  // topLeft:     Ice blue
+        new Color(0.92f, 0.88f, 0.98f),  // topRight:    Frost
+        new Color(0.50f, 0.25f, 0.85f),  // bottomLeft:  Violet
+        new Color(0.15f, 0.88f, 0.72f),  // bottomRight: Cool teal
     };
     
-    // 13: Volcanic Ash - Kırmızı → Turuncu → Sarı → Siyahımsı
+    // 13: Volcanic - Lava → Alev → Kükürt → Obsidyen (ateş)
     public static readonly Color[] VolcanicAsh = new Color[]
     {
-        new Color(0.82f, 0.18f, 0.15f),  // topLeft:     Lava red
-        new Color(0.95f, 0.58f, 0.18f),  // topRight:    Molten orange
-        new Color(0.95f, 0.88f, 0.30f),  // bottomLeft:  Sulfur yellow
-        new Color(0.35f, 0.25f, 0.42f),  // bottomRight: Dark obsidian
+        new Color(0.92f, 0.10f, 0.08f),  // topLeft:     Lava red
+        new Color(1.00f, 0.60f, 0.05f),  // topRight:    Flame orange
+        new Color(1.00f, 0.92f, 0.15f),  // bottomLeft:  Sulfur yellow
+        new Color(0.35f, 0.15f, 0.50f),  // bottomRight: Obsidian
     };
     
-    // 14: Cherry Blossom - Pembe → Beyaz → Mor → Yeşil
+    // 14: Sakura - Pembe → Krem → Mor → Yeşil (bahar çiçek)
     public static readonly Color[] CherryBlossom = new Color[]
     {
-        new Color(0.95f, 0.62f, 0.72f),  // topLeft:     Sakura pink
-        new Color(0.95f, 0.92f, 0.88f),  // topRight:    Cream
-        new Color(0.68f, 0.35f, 0.72f),  // bottomLeft:  Plum purple
-        new Color(0.55f, 0.82f, 0.50f),  // bottomRight: Spring green
+        new Color(0.98f, 0.50f, 0.68f),  // topLeft:     Sakura pink
+        new Color(0.98f, 0.92f, 0.78f),  // topRight:    Cream
+        new Color(0.70f, 0.20f, 0.78f),  // bottomLeft:  Plum purple
+        new Color(0.35f, 0.88f, 0.38f),  // bottomRight: Leaf green
     };
     
-    // 15: Emerald Cave - Yeşil → Mavi → Sarı → Mor
+    // 15: Emerald - Zümrüt → Safir → Sarı → Ametist (mücevher)
     public static readonly Color[] EmeraldCave = new Color[]
     {
-        new Color(0.18f, 0.72f, 0.42f),  // topLeft:     Emerald green
-        new Color(0.25f, 0.48f, 0.85f),  // topRight:    Sapphire blue
-        new Color(0.82f, 0.88f, 0.28f),  // bottomLeft:  Chartreuse
-        new Color(0.62f, 0.28f, 0.72f),  // bottomRight: Amethyst purple
+        new Color(0.05f, 0.82f, 0.38f),  // topLeft:     Emerald
+        new Color(0.12f, 0.40f, 0.95f),  // topRight:    Sapphire
+        new Color(0.90f, 0.92f, 0.15f),  // bottomLeft:  Chartreuse
+        new Color(0.68f, 0.18f, 0.82f),  // bottomRight: Amethyst
     };
     
     // Tüm paletler (her biri 4 köşe rengi)
@@ -210,62 +211,62 @@ public static class ColorPalettes
     
     public static readonly Color[] BackgroundColors = new Color[]
     {
-        new Color(0.95f, 0.93f, 0.97f),  // Sunset - ultra soft lavender
-        new Color(0.93f, 0.95f, 0.98f),  // Ocean - ultra soft blue
-        new Color(0.94f, 0.97f, 0.94f),  // Spring - ultra soft mint
-        new Color(0.98f, 0.93f, 0.95f),  // Berry - ultra soft pink
-        new Color(0.98f, 0.96f, 0.93f),  // Desert - ultra soft cream
-        new Color(0.94f, 0.95f, 0.98f),  // Northern - ultra soft ice blue
-        new Color(0.98f, 0.95f, 0.92f),  // Autumn - ultra soft peach
-        new Color(0.98f, 0.94f, 0.93f),  // Tropical - ultra soft coral
-        new Color(0.95f, 0.93f, 0.98f),  // Lavender - ultra soft lilac
-        new Color(0.93f, 0.94f, 0.97f),  // Midnight - ultra soft slate
-        new Color(0.93f, 0.97f, 0.97f),  // Coral - ultra soft aqua
-        new Color(0.98f, 0.97f, 0.93f),  // Golden - ultra soft gold
-        new Color(0.94f, 0.97f, 0.99f),  // Arctic - ultra soft frost
-        new Color(0.98f, 0.94f, 0.93f),  // Volcanic - ultra soft warm
-        new Color(0.99f, 0.94f, 0.95f),  // Cherry - ultra soft rose
-        new Color(0.93f, 0.98f, 0.95f),  // Emerald - ultra soft jade
+        new Color(0.98f, 0.92f, 0.90f),  // 0 Sunset - warm peach
+        new Color(0.90f, 0.94f, 0.98f),  // 1 Ocean - cool blue
+        new Color(0.92f, 0.98f, 0.92f),  // 2 Spring - fresh green
+        new Color(0.98f, 0.90f, 0.94f),  // 3 Berry - rosy pink
+        new Color(0.98f, 0.96f, 0.90f),  // 4 Desert - warm sand
+        new Color(0.90f, 0.96f, 0.96f),  // 5 Northern - icy teal
+        new Color(0.98f, 0.94f, 0.88f),  // 6 Autumn - warm amber
+        new Color(0.98f, 0.92f, 0.90f),  // 7 Tropical - coral
+        new Color(0.94f, 0.90f, 0.98f),  // 8 Lavender - purple
+        new Color(0.90f, 0.90f, 0.96f),  // 9 Midnight - deep blue
+        new Color(0.90f, 0.97f, 0.97f),  // 10 Coral - aqua
+        new Color(0.98f, 0.96f, 0.88f),  // 11 Golden - gold
+        new Color(0.92f, 0.96f, 0.99f),  // 12 Arctic - frost
+        new Color(0.98f, 0.92f, 0.88f),  // 13 Volcanic - warm
+        new Color(0.98f, 0.92f, 0.94f),  // 14 Cherry - blush
+        new Color(0.90f, 0.98f, 0.94f),  // 15 Emerald - jade
     };
     
     // ============ GRADIENT ARKA PLAN ÇİFTLERİ ============
     // Üst açık, alt koyu
     
-    // EYKA tarzı: Üst beyaza yakın, alt daha belirgin pastel
+    // Aydınlık gradient: Üst saf beyaz, alt belirgin renkli ton
     public static readonly Color[][] BackgroundGradients = new Color[][]
     {
-        // Sunset: Beyaz → lavender
-        new Color[] { new Color(0.99f, 0.98f, 1.00f), new Color(0.68f, 0.58f, 0.82f) },
-        // Ocean: Beyaz → blue
-        new Color[] { new Color(0.98f, 0.99f, 1.00f), new Color(0.58f, 0.70f, 0.90f) },
-        // Spring: Beyaz → mint
-        new Color[] { new Color(0.98f, 1.00f, 0.98f), new Color(0.60f, 0.84f, 0.68f) },
-        // Berry: Beyaz → pink
-        new Color[] { new Color(1.00f, 0.97f, 0.98f), new Color(0.88f, 0.60f, 0.70f) },
-        // Desert: Beyaz → cream
-        new Color[] { new Color(1.00f, 0.99f, 0.97f), new Color(0.88f, 0.78f, 0.60f) },
-        // Northern: Beyaz → ice blue
-        new Color[] { new Color(0.98f, 0.99f, 1.00f), new Color(0.62f, 0.72f, 0.90f) },
-        // Autumn: Beyaz → peach
-        new Color[] { new Color(1.00f, 0.98f, 0.97f), new Color(0.90f, 0.72f, 0.60f) },
-        // Tropical: Beyaz → coral
-        new Color[] { new Color(1.00f, 0.98f, 0.97f), new Color(0.90f, 0.66f, 0.62f) },
-        // Lavender: Beyaz → lilac
-        new Color[] { new Color(0.99f, 0.98f, 1.00f), new Color(0.72f, 0.62f, 0.86f) },
-        // Midnight: Beyaz → slate
-        new Color[] { new Color(0.98f, 0.98f, 1.00f), new Color(0.64f, 0.66f, 0.82f) },
-        // Coral: Beyaz → aqua
-        new Color[] { new Color(0.98f, 1.00f, 1.00f), new Color(0.58f, 0.82f, 0.82f) },
-        // Golden: Beyaz → gold
-        new Color[] { new Color(1.00f, 0.99f, 0.97f), new Color(0.88f, 0.80f, 0.55f) },
-        // Arctic: Beyaz → frost
-        new Color[] { new Color(0.98f, 0.99f, 1.00f), new Color(0.65f, 0.82f, 0.92f) },
-        // Volcanic: Beyaz → rose
-        new Color[] { new Color(1.00f, 0.98f, 0.97f), new Color(0.84f, 0.62f, 0.58f) },
-        // Cherry: Beyaz → blush
-        new Color[] { new Color(1.00f, 0.98f, 0.98f), new Color(0.88f, 0.65f, 0.72f) },
-        // Emerald: Beyaz → jade
-        new Color[] { new Color(0.98f, 1.00f, 0.98f), new Color(0.58f, 0.82f, 0.68f) },
+        // 0 Sunset: Beyaz → sıcak turuncu-pembe
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.90f, 0.68f, 0.60f) },
+        // 1 Ocean: Beyaz → canlı mavi
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.55f, 0.70f, 0.92f) },
+        // 2 Spring: Beyaz → canlı yeşil
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.60f, 0.85f, 0.62f) },
+        // 3 Berry: Beyaz → canlı pembe-mor
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.82f, 0.55f, 0.75f) },
+        // 4 Desert: Beyaz → sıcak kum-altın
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.92f, 0.80f, 0.55f) },
+        // 5 Northern: Beyaz → canlı turkuaz
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.50f, 0.82f, 0.78f) },
+        // 6 Autumn: Beyaz → sıcak turuncu
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.92f, 0.70f, 0.48f) },
+        // 7 Tropical: Beyaz → canlı mercan
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.95f, 0.62f, 0.55f) },
+        // 8 Lavender: Beyaz → canlı mor
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.75f, 0.60f, 0.90f) },
+        // 9 Midnight: Beyaz → koyu mavi-mor
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.58f, 0.52f, 0.78f) },
+        // 10 Coral: Beyaz → canlı aqua-turkuaz
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.48f, 0.82f, 0.82f) },
+        // 11 Golden: Beyaz → sıcak altın-sarı
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.92f, 0.82f, 0.45f) },
+        // 12 Arctic: Beyaz → soğuk buz mavisi
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.62f, 0.80f, 0.95f) },
+        // 13 Volcanic: Beyaz → sıcak kırmızı-turuncu
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.90f, 0.58f, 0.48f) },
+        // 14 Cherry: Beyaz → canlı pembe
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.92f, 0.62f, 0.70f) },
+        // 15 Emerald: Beyaz → canlı zümrüt
+        new Color[] { new Color(1.00f, 1.00f, 1.00f), new Color(0.48f, 0.82f, 0.60f) },
     };
     
     /// <summary>
@@ -301,9 +302,7 @@ public static class ColorPalettes
         u = Mathf.Clamp01(u);
         v = Mathf.Clamp01(v);
         
-        // Smooth easing for more perceptually uniform gradient (I Love Hue style)
-        u = SmoothStep(u);
-        v = SmoothStep(v);
+        // Lineer geçiş - keskin, net renk farkları (SmoothStep kaldırıldı)
         
         Color topLeft = palette[0];
         Color topRight = palette[1];
