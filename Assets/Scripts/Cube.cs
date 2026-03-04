@@ -90,10 +90,10 @@ public class Cube : MonoBehaviour
         if (material.HasProperty("_Metallic"))
             material.SetFloat("_Metallic", 0.0f);
         
-        // Çok yüksek emission - küpler kendi ışığını yaydığı için karanlık yüz olmaz
+        // Emission - renkler canlı kalsın, fazla beyazlaştırma yok
         material.EnableKeyword("_EMISSION");
         if (material.HasProperty("_EmissionColor"))
-            material.SetColor("_EmissionColor", Color.white * 1.2f);
+            material.SetColor("_EmissionColor", Color.white * 0.5f);
         
         meshRenderer.material = material;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -127,15 +127,14 @@ public class Cube : MonoBehaviour
         currentColor = color;
         if (material != null)
         {
-            // Rengi beyaza yaklaştır
-            Color brightColor = Color.Lerp(color, Color.white, 0.18f);
-            material.color = brightColor;
+            // Rengi olduğu gibi kullan - beyaza yaklaştırma yok
+            material.color = color;
             if (material.HasProperty("_BaseColor"))
-                material.SetColor("_BaseColor", brightColor);
+                material.SetColor("_BaseColor", color);
             
-            // Çok yüksek emission - küp kendi rengini yayar, karanlık yüz kalmaz
+            // Emission: rengin kendisi (karanlık yüz kalmaz ama beyazlaştırmaz)
             if (material.HasProperty("_EmissionColor"))
-                material.SetColor("_EmissionColor", brightColor * 0.9f);
+                material.SetColor("_EmissionColor", color * 0.45f);
         }
     }
     

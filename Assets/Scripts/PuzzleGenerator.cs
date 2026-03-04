@@ -66,8 +66,8 @@ public class PuzzleGenerator : MonoBehaviour
         
         ClearPuzzle();
         
-        // Level'a göre renk paletini ayarla
-        currentPaletteIndex = level.colorPaletteIndex;
+        // Level'a göre renk paletini ayarla - tüm 16 paleti eşit dağıt
+        currentPaletteIndex = level.levelNumber % ColorPalettes.AllPalettes.Length;
         
         // Level şeklini al
         puzzleShape = LevelManager.GenerateShapePositions(level);
